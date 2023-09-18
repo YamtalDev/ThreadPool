@@ -45,7 +45,7 @@ mvn clean install
 
 ```
 
-This command will download project dependencies, compile the code, and create a JAR file.
+* This command will download project dependencies, compile the code, and create a JAR file.
 
 
 3. **Run the Tests:**
@@ -56,7 +56,7 @@ You can run the project's tests to ensure everything is working as expected.
 mvn test
 
 ```
-This command will execute the test suite, and you should see the test results in your console.
+* This command will execute the test suite, and you should see the test results in your console.
 
 **License:**
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
