@@ -36,8 +36,13 @@ git clone https://github.com/YamtalDev/ThreadPool.git
 
 ```
 
-2. **Build the Project:**
+2. **Configuring Java Version (Optional):** If you need to configure a specific 
+Java version different from Java 17 used in this project, you can do so by modifying the pom.xml file. 
+
+
+3. **Build the Project:**
 Navigate to the project directory and build it using Maven.
+* This command will download project dependencies, compile the code, and create a JAR file.
 
 ``` shell
 cd ThreadPool
@@ -45,18 +50,15 @@ mvn clean install
 
 ```
 
-* This command will download project dependencies, compile the code, and create a JAR file.
-
-
-3. **Run the Tests:**
+4. **Run the Tests:**
 You can run the project's tests to ensure everything is working as expected.
+* This command will execute the test suite, and you should see the test results in your console.
 
 
 ``` shell
 mvn test
 
 ```
-* This command will execute the test suite, and you should see the test results in your console.
 
 **License:**
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
