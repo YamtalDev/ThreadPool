@@ -190,13 +190,13 @@ public class ThreadPoolTest
         Runnable highPriorityTask = () ->
         {
             int index = highPriorityCount.getAndIncrement();
-            strArray[index] = "High";
+            synchronized (strArray) {strArray[index] = "High";}
         };
 
         Runnable lowPriorityTask = () ->
         {
             int index = lowPriorityCount.getAndIncrement();
-            strArray[index] = "Low";
+            synchronized (strArray) {strArray[index] = "Low";}
         };
 
         for (int i = 0; i < threadCount; ++i)
