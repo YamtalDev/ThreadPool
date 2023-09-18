@@ -3,7 +3,7 @@ package thread.pool;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /******************************************************************************
  * A Fixed-size thread pool for executing tasks concurrently.
@@ -14,7 +14,7 @@ public class ThreadPool
 {
     private AtomicBoolean isRunning;
     private List<PoolThread> threads;
-    private ConcurrentLinkedQueue<Runnable> taskQueue;
+    private PriorityBlockingQueue<PrioritizedTask> taskQueue;
 
     /**************************************************************************
      * Constructs a ThreadPool with a specified number of worker threads.
@@ -24,7 +24,7 @@ public class ThreadPool
     {
         isRunning = new AtomicBoolean(true);
         threads = new ArrayList<PoolThread>(nThreads);
-        taskQueue = new ConcurrentLinkedQueue<Runnable>();
+        taskQueue = new PriorityBlockingQueue<PrioritizedTask>();
 
         for(int i = 0; i < nThreads; ++i)
         {
@@ -70,18 +70,29 @@ public class ThreadPool
     /**************************************************************************
      * Submits a task to be executed by a worker thread.
      * @param task The task to be executed.
+     * @param priority The task priority of execution.
      * @throws IllegalStateException If the thread pool is in the process of terminating.
+     * @throws IllegalArgumentException If the priority is not within the valid range.
     **************************************************************************/
-    public void execute(Runnable task) throws IllegalStateException
+    public void execute(Runnable task, int priority) throws IllegalStateException, IllegalArgumentException
     {
         if(isRunning.get())
         {
-            taskQueue.add(task);
+            taskQueue.add(new PrioritizedTask(task, priority));
         }
         else
         {
             throw new IllegalStateException("Thread pool is terminating");
         }
+    }
+
+    /**************************************************************************
+     * Submits a task to be executed by a worker thread with a default level 5 priority.
+     * @param task The task to be executed.
+    **************************************************************************/
+    public void execute(Runnable task) throws IllegalStateException, IllegalArgumentException
+    {
+        execute(task, 5);
     }
 
     /**************************************************************************
@@ -100,5 +111,16 @@ public class ThreadPool
         {
             thread.join();
         }
+    }
+
+    /**************************************************************************
+     * Shut down the thread pool by stopping all worker threads and waiting for finish.
+     * @throws InterruptedException If the current thread is interrupted while waiting.
+     * @throws IllegalStateException If the thread pool is still running.
+    **************************************************************************/
+    public void shutDown() throws IllegalStateException, InterruptedException
+    {
+        stop();
+        waitForTermination();
     }
 }

@@ -1,6 +1,6 @@
 package thread.pool;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 /******************************************************************************
  * Represents a worker thread in the thread pool.
@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class PoolThread extends Thread
 {
     private AtomicBoolean isRunning;
-    private ConcurrentLinkedQueue<Runnable> taskQueue;
+    private PriorityBlockingQueue<PrioritizedTask> taskQueue;
 
     /**************************************************************************
      * Initializes a new PoolThread with the given name, flag, and tasks queue.
@@ -17,7 +17,7 @@ public class PoolThread extends Thread
      * @param isRunning A flag indicating whether the thread should continue running.
      * @param taskQueue The queue of tasks to be executed.
     **************************************************************************/
-    public PoolThread(String taskName, AtomicBoolean isRunning, ConcurrentLinkedQueue<Runnable> taskQueue)
+    public PoolThread(String taskName, AtomicBoolean isRunning, PriorityBlockingQueue<PrioritizedTask> taskQueue)
     {
         super(taskName);
         this.isRunning = isRunning;
@@ -43,16 +43,17 @@ public class PoolThread extends Thread
         {
             while(true == isRunning.get() || !taskQueue.isEmpty())
             {
-                Runnable task;
-                while(null != (task = taskQueue.poll()))
+                PrioritizedTask task = taskQueue.take();;
+                if(task != null)
                 {
                     task.run();
                 }
             }
         }
-        catch(RuntimeException error)
+        catch(RuntimeException | InterruptedException error)
         {
             throw new ThreadPoolException(error);
         }
     }
 }
+

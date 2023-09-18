@@ -66,6 +66,32 @@ public class ThreadPoolTest
         {
             error.printStackTrace();
         }
+
+        Assert.assertEquals("All tasks must be executed", threadCount, count.get());
+    }
+
+    @Test
+    public void ThreadPoolTestShutDown() throws Exception
+    {
+        int threadCount = 20;
+        ThreadPool pool = new ThreadPool(threadCount);
+        final AtomicInteger count = new AtomicInteger(0);
+        Runnable task = () -> count.getAndIncrement();
+
+        for(int i = 0; i < threadCount; i++)
+        {
+            pool.execute(task);
+        }
+
+        try
+        {
+            pool.shutDown();
+        }
+        catch(IllegalStateException | InterruptedException error)
+        {
+            error.printStackTrace();
+        }
+
         Assert.assertEquals("All tasks must be executed", threadCount, count.get());
     }
 
