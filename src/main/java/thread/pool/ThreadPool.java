@@ -55,12 +55,13 @@ public class ThreadPool
     /**************************************************************************
      * Immediately terminates the thread pool, discarding pending tasks.
      * Worker threads are interrupted to ensure they stop if blocked on a task.
+     * @throws InterruptedException
     **************************************************************************/
     public void terminate()
     {
         taskQueue.clear();
-        stop();
-
+        isRunning.set(false);
+    
         for(PoolThread thread : threads)
         {
             thread.interrupt();
@@ -107,7 +108,7 @@ public class ThreadPool
             throw new IllegalStateException("Thread pool not terminated");
         }
 
-        for(Thread thread: threads)
+        for(PoolThread thread: threads)
         {
             thread.join();
         }

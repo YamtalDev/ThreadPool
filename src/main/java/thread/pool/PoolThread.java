@@ -1,7 +1,7 @@
 package thread.pool;
 
-import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.PriorityBlockingQueue;
 /******************************************************************************
  * Represents a worker thread in the thread pool.
  * @implNote The worker thread dequeues and run tasks from the task queue.
@@ -39,18 +39,20 @@ public class PoolThread extends Thread
     @Override
     public void run() throws ThreadPoolException
     {
+        boolean interrupted = false;
         try
         {
-            while(true == isRunning.get() || !taskQueue.isEmpty())
+            while(!interrupted && (isRunning.get() || !taskQueue.isEmpty()))
             {
                 PrioritizedTask task;
-                while((task = taskQueue.take()) != null)
+                interrupted = Thread.currentThread().isInterrupted();
+                while(null != (task = taskQueue.poll()))
                 {
                     task.run();
                 }
             }
         }
-        catch(RuntimeException | InterruptedException error)
+        catch(RuntimeException error)
         {
             throw new ThreadPoolException(error);
         }
