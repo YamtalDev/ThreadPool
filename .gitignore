@@ -1,4 +1,4 @@
-.vscode
+.vscode/
 *.class
 target/
 pom.xml.tag
