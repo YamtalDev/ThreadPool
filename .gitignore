@@ -1,5 +1,6 @@
 .vscode/
 *.class
+
 target/
 pom.xml.tag
 pom.xml.releaseBackup
