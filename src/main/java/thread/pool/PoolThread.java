@@ -43,8 +43,8 @@ public class PoolThread extends Thread
         {
             while(true == isRunning.get() || !taskQueue.isEmpty())
             {
-                PrioritizedTask task = taskQueue.take();;
-                if(task != null)
+                PrioritizedTask task;
+                while((task = taskQueue.take()) != null)
                 {
                     task.run();
                 }
