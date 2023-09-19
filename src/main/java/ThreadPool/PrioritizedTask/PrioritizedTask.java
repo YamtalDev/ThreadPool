@@ -1,4 +1,4 @@
-package thread.pool;
+package ThreadPool.PrioritizedTask;
 
 /******************************************************************************
  * A wrapper class for tasks that adds a priority level. Instances of this class

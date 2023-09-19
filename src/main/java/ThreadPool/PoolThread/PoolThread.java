@@ -1,7 +1,9 @@
-package thread.pool;
+package ThreadPool.PoolThread;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import ThreadPool.PrioritizedTask.PrioritizedTask;
 import java.util.concurrent.PriorityBlockingQueue;
+import ThreadPool.ThreadPoolException.ThreadPoolException;
 /******************************************************************************
  * Represents a worker thread in the thread pool.
  * @implNote The worker thread dequeues and run tasks from the task queue.

@@ -1,7 +1,7 @@
-package thread.pool;
-
+package ThreadPool;
 import org.junit.Test;
 import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ThreadPoolTest
@@ -181,12 +181,10 @@ public class ThreadPoolTest
     {
         int threadCount = 100;
         ThreadPool pool = new ThreadPool(threadCount);
-        
         AtomicInteger highPriorityCount = new AtomicInteger(0);
         AtomicInteger lowPriorityCount = new AtomicInteger(0);
 
         String[] strArray = new String[threadCount];
-
         Runnable highPriorityTask = () ->
         {
             int index = highPriorityCount.getAndIncrement();
@@ -199,16 +197,10 @@ public class ThreadPoolTest
             synchronized (strArray) {strArray[index] = "Low";}
         };
 
-        for (int i = 0; i < threadCount; ++i)
+        for(int i = 0; i < threadCount; ++i)
         {
-            if(i % 2 == 0)
-            {
-                pool.execute(lowPriorityTask, 2);
-            }
-            else
-            {
-                pool.execute(highPriorityTask, 9);
-            }
+            pool.execute(lowPriorityTask, 1);
+            pool.execute(highPriorityTask, 10);
         }
 
         try
@@ -220,30 +212,9 @@ public class ThreadPoolTest
             error.printStackTrace();
         }
 
-
         for(String str: strArray)
         {
-            System.out.println(str);
+            assertEquals("Strings in the array need to be the high priority ones", str, "High");
         }
-        // boolean highPriorityCompletedFirst = true;
-        // for(int i = 0; i < threadCount; ++i)
-        // {
-        //     if(strArray[i] == null)
-        //     {
-        //         continue;
-        //     }
-        //     if(strArray[i].equals("High"))
-        //     {
-        //         highPriorityCompletedFirst = true;
-        //         break;
-        //     }
-        //     else if(strArray[i].equals("Low"))
-        //     {
-        //         highPriorityCompletedFirst = false;
-        //         break;
-        //     }
-        // }
-
-        // Assert.assertTrue("High-priority tasks should execute before low-priority tasks", highPriorityCompletedFirst);
     }
 }

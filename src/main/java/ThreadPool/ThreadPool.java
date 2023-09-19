@@ -1,10 +1,11 @@
-package thread.pool;
+package ThreadPool;
 
 import java.util.List;
 import java.util.ArrayList;
+import ThreadPool.PoolThread.PoolThread;
 import java.util.concurrent.atomic.AtomicBoolean;
+import ThreadPool.PrioritizedTask.PrioritizedTask;
 import java.util.concurrent.PriorityBlockingQueue;
-
 /******************************************************************************
  * A Fixed-size thread pool for executing tasks concurrently.
  * Tasks are submitted as Runnable instances and executed by worker threads.
@@ -50,6 +51,7 @@ public class ThreadPool
     public void stop()
     {
         isRunning.set(false);
+        synchronized (taskQueue) {taskQueue.notifyAll();}
     }
 
     /**************************************************************************
@@ -59,9 +61,9 @@ public class ThreadPool
     **************************************************************************/
     public void terminate()
     {
+        stop();
         taskQueue.clear();
-        isRunning.set(false);
-    
+
         for(PoolThread thread : threads)
         {
             thread.interrupt();
@@ -80,6 +82,7 @@ public class ThreadPool
         if(isRunning.get())
         {
             taskQueue.add(new PrioritizedTask(task, priority));
+            synchronized (taskQueue) {taskQueue.notifyAll();}
         }
         else
         {

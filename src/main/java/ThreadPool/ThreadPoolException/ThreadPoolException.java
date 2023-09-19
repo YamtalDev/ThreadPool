@@ -1,4 +1,4 @@
-package thread.pool;
+package ThreadPool.ThreadPoolException;
 
 /******************************************************************************
  * Custom exception class for the ThreadPool.
