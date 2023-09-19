@@ -1,25 +1,23 @@
-package ThreadPool.PoolThread;
+package ThreadPool;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import ThreadPool.PrioritizedTask.PrioritizedTask;
 import java.util.concurrent.PriorityBlockingQueue;
-import ThreadPool.ThreadPoolException.ThreadPoolException;
 /******************************************************************************
  * Represents a worker thread in the thread pool.
  * @implNote The worker thread dequeues and run tasks from the task queue.
 ******************************************************************************/
-public class PoolThread extends Thread
+public class WorkerThread extends Thread
 {
     private AtomicBoolean isRunning;
     private PriorityBlockingQueue<PrioritizedTask> taskQueue;
 
     /**************************************************************************
-     * Initializes a new PoolThread with the given name, flag, and tasks queue.
+     * Initializes a new WorkerThread with the given name, flag, and tasks queue.
      * @param taskName  The name of the thread.
      * @param isRunning A flag indicating whether the thread should continue running.
      * @param taskQueue The queue of tasks to be executed.
     **************************************************************************/
-    public PoolThread(String taskName, AtomicBoolean isRunning, PriorityBlockingQueue<PrioritizedTask> taskQueue)
+    public WorkerThread(String taskName, AtomicBoolean isRunning, PriorityBlockingQueue<PrioritizedTask> taskQueue)
     {
         super(taskName);
         this.isRunning = isRunning;

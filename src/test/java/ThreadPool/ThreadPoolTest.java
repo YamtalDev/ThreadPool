@@ -1,4 +1,5 @@
 package ThreadPool;
+
 import org.junit.Test;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
@@ -179,28 +180,44 @@ public class ThreadPoolTest
     @Test
     public void threadPoolTestPriorityOrder() throws InterruptedException
     {
-        int threadCount = 100;
+        int threadCount = 2;
         ThreadPool pool = new ThreadPool(threadCount);
         AtomicInteger highPriorityCount = new AtomicInteger(0);
         AtomicInteger lowPriorityCount = new AtomicInteger(0);
 
-        String[] strArray = new String[threadCount];
+        String[] strArray = new String[10];
         Runnable highPriorityTask = () ->
         {
             int index = highPriorityCount.getAndIncrement();
             synchronized (strArray) {strArray[index] = "High";}
+            try
+            {
+                Thread.sleep(100);
+            }
+            catch(InterruptedException error)
+            {
+                error.printStackTrace();
+            }
         };
 
         Runnable lowPriorityTask = () ->
         {
             int index = lowPriorityCount.getAndIncrement();
             synchronized (strArray) {strArray[index] = "Low";}
+            try
+            {
+                Thread.sleep(100);
+            }
+            catch(InterruptedException error)
+            {
+                error.printStackTrace();
+            }
         };
 
-        for(int i = 0; i < threadCount; ++i)
+        for(int i = 0; i < 10; ++i)
         {
-            pool.execute(lowPriorityTask, 1);
             pool.execute(highPriorityTask, 10);
+            pool.execute(lowPriorityTask, 1);
         }
 
         try
@@ -214,7 +231,7 @@ public class ThreadPoolTest
 
         for(String str: strArray)
         {
-            assertEquals("Strings in the array need to be the high priority ones", str, "High");
+            assertEquals("Strings in the array need to be the high priority ones", str, "Low");
         }
     }
 }

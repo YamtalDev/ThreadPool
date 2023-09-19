@@ -1,4 +1,4 @@
-package ThreadPool.ThreadPoolException;
+package ThreadPool;
 
 /******************************************************************************
  * Custom exception class for the ThreadPool.
@@ -11,4 +11,3 @@ public class ThreadPoolException extends RuntimeException
         super(cause);
     }
 }
-

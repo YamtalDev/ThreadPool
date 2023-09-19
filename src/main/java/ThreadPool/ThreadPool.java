@@ -2,34 +2,32 @@ package ThreadPool;
 
 import java.util.List;
 import java.util.ArrayList;
-import ThreadPool.PoolThread.PoolThread;
 import java.util.concurrent.atomic.AtomicBoolean;
-import ThreadPool.PrioritizedTask.PrioritizedTask;
 import java.util.concurrent.PriorityBlockingQueue;
 /******************************************************************************
  * A Fixed-size thread pool for executing tasks concurrently.
  * Tasks are submitted as Runnable instances and executed by worker threads.
- * @see PoolThread
+ * @see WorkerThread
 ******************************************************************************/
 public class ThreadPool
 {
     private AtomicBoolean isRunning;
-    private List<PoolThread> threads;
+    private List<WorkerThread> threads;
     private PriorityBlockingQueue<PrioritizedTask> taskQueue;
 
     /**************************************************************************
      * Constructs a ThreadPool with a specified number of worker threads.
      * @param nThreads The number of worker threads in the pool.
     **************************************************************************/
-    public ThreadPool(int nThreads)
+    public ThreadPool(int threadsNum)
     {
         isRunning = new AtomicBoolean(true);
-        threads = new ArrayList<PoolThread>(nThreads);
+        threads = new ArrayList<WorkerThread>(threadsNum);
         taskQueue = new PriorityBlockingQueue<PrioritizedTask>();
 
-        for(int i = 0; i < nThreads; ++i)
+        for(int i = 0; i < threadsNum; ++i)
         {
-            PoolThread thread = new PoolThread("WorkerThread - " + i, isRunning, taskQueue);
+            WorkerThread thread = new WorkerThread("WorkerThread - " + i, isRunning, taskQueue);
             thread.start();
             threads.add(thread);
         }
@@ -63,8 +61,7 @@ public class ThreadPool
     {
         stop();
         taskQueue.clear();
-
-        for(PoolThread thread : threads)
+        for(WorkerThread thread : threads)
         {
             thread.interrupt();
         }
@@ -82,7 +79,6 @@ public class ThreadPool
         if(isRunning.get())
         {
             taskQueue.add(new PrioritizedTask(task, priority));
-            synchronized (taskQueue) {taskQueue.notifyAll();}
         }
         else
         {
@@ -111,7 +107,7 @@ public class ThreadPool
             throw new IllegalStateException("Thread pool not terminated");
         }
 
-        for(PoolThread thread: threads)
+        for(WorkerThread thread: threads)
         {
             thread.join();
         }

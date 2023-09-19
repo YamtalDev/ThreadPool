@@ -1,4 +1,4 @@
-package ThreadPool.PrioritizedTask;
+package ThreadPool;
 
 /******************************************************************************
  * A wrapper class for tasks that adds a priority level. Instances of this class
@@ -50,7 +50,7 @@ public class PrioritizedTask implements Runnable, Comparable<PrioritizedTask>
     @Override
     public int compareTo(PrioritizedTask other)
     {
-        return (Integer.compare(getPriority(), other.getPriority()));
+        return (Integer.compare(other.getPriority(), getPriority()));
     }
 
     /**************************************************************************
